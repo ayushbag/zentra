@@ -1,0 +1,73 @@
+import { TaskPriorityEnum, TaskStatusEnum, type TaskPriorityEnumType, type TaskStatusEnumType } from "../enums/task.enum.js";
+import mongoose, { Document, Schema } from "mongoose";
+import { generateTaskCode } from "../utils/uuid.js";
+
+export interface TaskDocument extends Document {
+    taskCode: string;
+    title: string;
+    description: string;
+    project: mongoose.Types.ObjectId;
+    workspace: mongoose.Types.ObjectId;
+    status: TaskStatusEnumType;
+    priority: TaskPriorityEnumType;
+    assignedTo: mongoose.Types.ObjectId | null;
+    createdBy: mongoose.Types.ObjectId;
+    dueDate: Date | null;
+    createdAt: Date;
+    updatedAt: Date;
+};
+
+const taskSchema = new Schema<TaskDocument>({
+    taskCode: {
+        type: String,
+        unique: true,
+        default: generateTaskCode,
+    },
+    title: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    description: {
+        type: String,
+        trim: true,
+        default: null,
+    },
+    project: {
+        type: Schema.Types.ObjectId,
+        ref: "Project",
+        required: true
+    },
+    workspace: {
+        type: Schema.Types.ObjectId,
+        ref: "Workspace",
+        required: true,
+    },
+    status: {
+        type: String,
+        enum: Object.values(TaskStatusEnum),
+        default: TaskStatusEnum.TODO,
+    },
+    priority: {
+        type: String,
+        enum: Object.values(TaskPriorityEnum),
+        default: TaskPriorityEnum.MEDIUM
+    },
+    assignedTo: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
+    createdBy: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
+    dueDate: {
+        type: Date,
+        default: null,
+    },
+});
+
+export const TaskModel = mongoose.model<TaskDocument>("Task", taskSchema);
+export default TaskModel;

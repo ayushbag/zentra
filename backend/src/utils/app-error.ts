@@ -2,7 +2,7 @@ import { HTTPSTATUS, type HttpStatusCodeType } from "../config/http.config.js";
 import {
   ErrorCodeEnum,
   type ErrorCodeEnumType,
-} from "../enums/errorCode.enum.js";
+} from "../enums/error-code.enum.js";
 
 /**
  * Base application error class.

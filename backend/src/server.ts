@@ -5,9 +5,9 @@ import session from "cookie-session";
 import { config } from "./config/app.config.js";
 import { errorHandler } from "./middlewares/errorHandler.middleware.js";
 import { HTTPSTATUS } from "./config/http.config.js";
-import { BadRequestException } from "./utils/appError.js";
+import { BadRequestException } from "./utils/app-error.js";
 import { asyncHandler } from "./middlewares/asyncHandler.middleware.js";
-import { ErrorCodeEnum } from "./enums/errorCode.enum.js";
+import { ErrorCodeEnum } from "./enums/error-code.enum.js";
 
 export const app = express();
 const BASE_PATH = config.BASE_PATH;
