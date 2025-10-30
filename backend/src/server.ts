@@ -3,6 +3,11 @@ import express, { type Request, type Response, type NextFunction } from "express
 import cors from "cors";
 import session from "cookie-session";
 import { config } from "./config/app.config.js";
+import { errorHandler } from "./middlewares/errorHandler.middleware.js";
+import { HTTPSTATUS } from "./config/http.config.js";
+import { BadRequestException } from "./utils/appError.js";
+import { asyncHandler } from "./middlewares/asyncHandler.middleware.js";
+import { ErrorCodeEnum } from "./enums/errorCode.enum.js";
 
 export const app = express();
 const BASE_PATH = config.BASE_PATH;
@@ -32,8 +37,17 @@ app.use(
 )
 
 // Routes
-app.get('/', (req: Request, res: Response, next: NextFunction) => {
-    res.status(200).json({
-        message: "Hello World"
+app.get('/',  
+    asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+        throw new BadRequestException(
+            "This is bad request", 
+            ErrorCodeEnum.AUTH_INVALID_TOKEN
+        )
+        res.status(HTTPSTATUS.OK).json({
+            message: "Hello World"
+        })
     })
-});
+)
+
+// Error handling
+app.use(errorHandler);
