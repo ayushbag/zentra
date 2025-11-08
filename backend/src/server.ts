@@ -9,6 +9,10 @@ import { BadRequestException } from "./utils/app-error.js";
 import { asyncHandler } from "./middlewares/asyncHandler.middleware.js";
 import { ErrorCodeEnum } from "./enums/error-code.enum.js";
 
+import "./config/passport.config.js";
+import passport from "passport";
+import authRoutes from "./routes/auth.routes.js";
+
 export const app = express();
 const BASE_PATH = config.BASE_PATH;
 
@@ -27,6 +31,9 @@ app.use(
         sameSite: "lax"
     })
 )
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Enable CORS for frontend origin
 app.use(
@@ -48,6 +55,8 @@ app.get('/',
         })
     })
 )
+
+app.use(`${BASE_PATH}/auth`, authRoutes);
 
 // Error handling
 app.use(errorHandler);

@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "tsc-watch --onSuccess \"node ./dist/index.js\"",
     "build": "tsc && cp /package.json ./dist",
-    "start": "node /dist/index.js"
+    "start": "node /dist/index.js",
+    "seed": "tsx src/seeders/role.seeder.ts"
   },
   "keywords": [],
   "author": "",
@@ -20,8 +21,9 @@
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "mongoose": "^8.19.2",
-    "passport": "^0.7.0",
+    "passport": "^0.5.3",
     "passport-google-oauth2": "^0.2.0",
+    "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
     "uuid": "^13.0.0",
     "zod": "^4.1.12"
@@ -34,8 +36,10 @@
     "@types/node": "^24.9.2",
     "@types/passport": "^1.0.17",
     "@types/passport-google-oauth2": "^0.1.10",
+    "@types/passport-google-oauth20": "^2.0.17",
     "@types/passport-local": "^1.0.38",
     "@types/uuid": "^10.0.0",
-    "tsc-watch": "^7.2.0"
+    "tsc-watch": "^7.2.0",
+    "tsx": "^4.20.6"
   }
 }
