@@ -56,7 +56,7 @@ const taskSchema = new Schema<TaskDocument>({
     assignedTo: {
         type: Schema.Types.ObjectId,
         ref: "User",
-        required: true
+        default: null
     },
     createdBy: {
         type: Schema.Types.ObjectId,
