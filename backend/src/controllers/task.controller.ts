@@ -6,7 +6,7 @@ import { workspaceIdSchema } from "../validation/workspace.validation.js";
 import { getMemberRoleInWorkspace } from "../service/member.service.js";
 import { roleGuard } from "../utils/role-guard.js";
 import { Permissions } from "../enums/role.enum.js";
-import { createTaskService, getAllTasksService, updateTaskService } from "../service/task.service.js";
+import { createTaskService, deleteTaskService, getAllTasksService, getTaskByIdService, updateTaskService } from "../service/task.service.js";
 import { HTTPSTATUS } from "../config/http.config.js";
 
 export const createTaskController = asyncHandler(
@@ -110,6 +110,52 @@ export const getAllTasksController = asyncHandler(
         res.status(HTTPSTATUS.OK).json({
             message: "All tasks fetched successfully",
             ...result
+        })
+    }
+)
+
+export const getTaskByIdController = asyncHandler(
+    async (req: Request, res: Response) => {
+        const taskId = taskIdSchema.parse(req.params.id); 
+        const projectId = projectIdSchema.parse(req.params.projectId); 
+        const workspaceId = workspaceIdSchema.parse(req.params.workspaceId);
+        
+        const userId = req.user?._id;
+
+        const { role } = await getMemberRoleInWorkspace(userId, workspaceId);
+        roleGuard(role, [Permissions.VIEW_ONLY]);
+
+        const { task } = await getTaskByIdService(
+            taskId,
+            projectId,
+            workspaceId
+        )
+
+        return res.status(HTTPSTATUS.OK).json({
+            message: "Task fetched successfully",
+            task,
+        })
+    }
+)
+
+export const deleteTaskController = asyncHandler(
+    async (req: Request, res: Response) => {
+        const taskId = taskIdSchema.parse(req.params.id);
+        const workspaceId = workspaceIdSchema.parse(req.params.workspaceId);
+
+        const userId = req.user?._id;
+
+        const { role } = await getMemberRoleInWorkspace(userId, workspaceId);
+        roleGuard(role, [Permissions.DELETE_TASK]);
+
+        const { deletedTaskId } = await deleteTaskService(
+            workspaceId,
+            taskId,
+        )
+
+        return res.status(HTTPSTATUS.OK).json({
+            message: "Task deleted successfully",
+            deletedTaskId
         })
     }
 )
